@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+RUN apt-get update && apt-get install -y libqpdf-dev && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY app.py .
+EXPOSE 5000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+```
+
+---
+
+**`requirements.txt`** (same as before):
+```
+flask==3.0.3
+pikepdf==8.15.1
+gunicorn==22.0.0
