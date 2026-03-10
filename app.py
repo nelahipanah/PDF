@@ -16,7 +16,13 @@ def unlock():
         if not data or 'pdf_base64' not in data:
             return jsonify({"error": "Missing pdf_base64"}), 400
 
-        pdf_bytes = base64.b64decode(data['pdf_base64'])
+        pdf_base64 = data['pdf_base64']
+        
+        # Strip data URI prefix if present
+        if ',' in pdf_base64:
+            pdf_base64 = pdf_base64.split(',')[1]
+
+        pdf_bytes = base64.b64decode(pdf_base64)
 
         with pikepdf.open(BytesIO(pdf_bytes), suppress_warnings=True) as pdf:
             output = BytesIO()
